@@ -1,4 +1,4 @@
-import { PrettyChatWindow } from 'react-chat-engine-pretty';
+import { PrettyChatWindow } from 'react-chat-engine-pretty;
 
 const ChatsPage = ({ user }) => {
   return (
