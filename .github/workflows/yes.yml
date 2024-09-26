@@ -9,7 +9,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Cache Super Linter
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.cache/super-linter
+          key: ${{ runner.os }}-linter-${{ hashFiles('**/*') }}
+          restore-keys: |
+            ${{ runner.os }}-linter-
+
+      - name: Get changed files
+        id: changed-files
+        run: |
+          echo "::set-output name=files::$(git diff --name-only ${{ github.event.before }} ${{ github.sha }})"
+
       - name: Run Super Linter
         uses: github/super-linter@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          LINT_FILES: ${{ steps.changed-files.outputs.files }}
+          RUN_LINTERS: 'javascript,python'  # Adjust to specify only necessary languages
